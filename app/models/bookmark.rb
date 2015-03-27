@@ -202,7 +202,7 @@ class Bookmark < ActiveRecord::Base
             result_array << result_hash
 
           end
-        elsif ( order_by == "most_popular" and the_userid != nil) 
+        elsif ( order_by == "most_popular" and the_userid != nil) ## Most popular tags for the supplied user
           ### retrieving the most popular records that this user.(The user need not be the discoverer). First retrieve the the user's bookmarks from the bmapping.
           ### order these records, based on the user_count of the url
           temp_result_records = Bmapping.where([" user_id = ?", the_userid])
@@ -228,7 +228,7 @@ class Bookmark < ActiveRecord::Base
             result_hash["tags"] =BookmarksHelper.join_tags(tag_array)
             result_array << result_hash
           end
-        elsif (order_by == "most_popular" and the_userid == nil)
+        elsif (order_by == "most_popular" and the_userid == nil) ## Most popular tags for all users
         ## returns the url boomarked by the most number of users, the discoverer of that url, the title and description provided by the discoverer
         result_records = Bookmark.all(:order =>"user_count DESC", :limit =>20)
         for result in result_records
