@@ -95,17 +95,19 @@ class Bookmark < ActiveRecord::Base
     ## gives the 20 most popular or 20 most recent bookmarks in the system, depending on the order_by parameter. Function returns
     ## an array. Each element of the array is a hash, detailing one record
     def self.search_alltags_allusers(order_by)
+      ##Since we want to search all tags irrespective of user, we pass nil as first parameter for the user id field
       Bookmark.search_alltags(nil,order_by)
     end
 
     ## Searches the system for bookmarks that were tagged with all the "words" passed in the tags_array. Orders these results based on the order_by pattern
     def  self.search_fortags_allusers(tags_array, order_by)
-        
+        ## Since we want to search for tags from tags_array for all users, we pass nil as third parameter for user_id
         Bookmark.search_fortags(tags_array, order_by,nil)
       
     end
     ## searches for tspecified tags, among a specified user, orders them by most popular and the most recently added
     def self.search_fortags_foruser(tags_array, this_user_id, order_by)
+      ## Here we pass all the three fields. tags_array contains list of tags to be searched by the below method
       Bookmark.search_fortags(tags_array,order_by,this_user_id)
     end
 
@@ -154,6 +156,7 @@ class Bookmark < ActiveRecord::Base
       ## returns the 20 most recent bookmarks_mappings made by the user specified, or the most popular bookmarks in this user's repository, depending on the order_by
       ## Function returns an array. Each element of the array is a hash detailing one record
       def self.search_alltags_foruser (the_userid, order_by)
+        ## Below method will search for all tags for the given user id
          Bookmark.search_alltags(the_userid,order_by)
       end
 
@@ -166,6 +169,7 @@ class Bookmark < ActiveRecord::Base
           # For each tuple returned from the bmapping, generate a hash, containing the url, the specified user's name, date this mapping was made,
           ## title, and description provided by this user. Store these hashes sequentially in a array ad return the array
 
+          ## If no user id is passed, the search is for all the user ids
           if(the_userid == nil)
             ## find all the records in the system, order them by the date created. Using Bmapping here. Returns mappings that where created most recently,
             ## the user that created this mapping, the title and description provided this user
@@ -287,6 +291,7 @@ class Bookmark < ActiveRecord::Base
       end
       logger.warn("******************************************************* #{@q_tuples_with_all_tags.inspect}")
 
+      ##If the user id is passed, it will not be nil. So we use it in the query as shown below.
       if(this_user_id != nil)
         ## now you have qualifer tuples with all the required bmapping ids and the requested userid- search for the req ones
         temp_result_records =  Bmapping.where(["id in (?) and user_id = ?", @q_tuples_with_all_tags, this_user_id ])
