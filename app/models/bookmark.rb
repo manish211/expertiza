@@ -119,11 +119,14 @@ class Bookmark < ActiveRecord::Base
     # Check if bookmark url exists.
     def self.check_bookmark_exists (b_url)
       bookmark_resource = Bookmark.where(["url = ?",b_url]).first
-      if bookmark_resource.nil?
-        return false
-      else
-        return true
-      end
+      # if bookmark_resource.nil?
+      #   return false
+      # else
+      #   return true
+      # end
+
+      !bookmark_resource.nil?
+
     end
 
     def self.check_bmapping_exists(b_url, session_user)
